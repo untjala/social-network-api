@@ -12,7 +12,7 @@ const userSchema = new Schema(
       type: String,
       unique: true,
       required: true,
-      //Pulled from module 18 challenge
+      //Pulled regEx from module 18 challenge
       match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/]
     },
     thoughts: [{
@@ -27,6 +27,7 @@ const userSchema = new Schema(
 {
     toJSON: {
       virtuals: true,
+      getters: true
     },
     id: false,
   }
@@ -38,6 +39,6 @@ userSchema
     return this.friends.length;
   })
 
-const User = model('user', userSchema);
+const User = model('User', userSchema);
 
 module.exports = User;

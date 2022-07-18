@@ -63,11 +63,11 @@ const thoughtSchema = new Schema(
 );
 
 //Virtual to retrieve the length of the 'reaction' array
-userSchema
+thoughtSchema
   .virtual('reactionCount')
   .get(function () {
     return this.reactions.length;
   })
-const Thought = model('thought', thoughtSchema);
+const Thought = model('Thought', thoughtSchema);
 
 module.exports = Thought;

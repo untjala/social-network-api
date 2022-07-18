@@ -2,8 +2,8 @@ const { User } = require('../models');
 
 module.exports = {
   //Creates a new user
-  createUser(req, res) {
-    User.create(req.body)
+  createUser({body}, res) {
+    User.create(body)
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
@@ -11,19 +11,30 @@ module.exports = {
   //Gets all users
   getUsers(req, res) {
     User.find({})
-      //Populate the thoughts for a user
-      .populate({ path: 'thoughts', select: '-__v' })
-      //Populate the friends for a user
-      .populate({ path: 'friends', select: '-__v' })
+    //Populate the thoughts for a user
+    .populate({
+      path: 'thoughts',
+      select: '-__v'
+    })
+    //Populate the friends for a user
+    .populate({
+      path: 'friends',
+      select: '-__v'
+    })
+    .select('-__v')
       .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      })
   },
 
   //Gets a single user by their ID
-  getSingleUser(req, res) {
-    User.findOne({ _id: req.params.userId })
-      .populate({ path: 'thoughts', select: '-__v' })
-      .populate({ path: 'friends', select: '-__v' })
+  getSingleUser({params}, res) {
+    User.findOne({ _id: params.id })
+      .select('-__v')
+      .populate('thoughts')
+      .populate('friends')
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID 😕' })
@@ -75,5 +86,5 @@ module.exports = {
     )
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
-  }
+  },
 };
