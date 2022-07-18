@@ -4,7 +4,7 @@ module.exports = {
   //Creates a new user
   createUser(req, res) {
     User.create(req.body)
-      .then((user) => res.json(user))
+      .then((user) => res.json({message: 'User created! 🥳 '}))
       .catch((err) => res.status(500).json(err));
   },
 
