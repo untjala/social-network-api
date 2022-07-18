@@ -24,7 +24,6 @@ module.exports = {
     User.findOne({ _id: req.params.userId })
       .populate({ path: 'thoughts', select: '-__v' })
       .populate({ path: 'friends', select: '-__v' })
-      .select('-__v')
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID 😕' })
@@ -53,8 +52,8 @@ module.exports = {
       .then((user) =>
         !user
           ? res
-            .json({ message: 'Video deleted but no user with this id!' })
-          : res.json({ message: 'Video successfully deleted from user! 💥' })
+            .json({ message: 'No user found with this id!' })
+          : res.json({ message: 'User successfully deleted! 💥' })
       )
       .catch((err) => res.status(500).json(err));
   },
