@@ -2,8 +2,8 @@ const { User } = require('../models');
 
 module.exports = {
   //Creates a new user
-  createUser({body}, res) {
-    User.create(body)
+  createUser(req, res) {
+    User.create(req.body)
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
@@ -30,11 +30,17 @@ module.exports = {
   },
 
   //Gets a single user by their ID
-  getSingleUser({params}, res) {
-    User.findOne({ _id: params.id })
+  getSingleUser(req, res) {
+    User.findOne({ _id: req.params.id })
       .select('-__v')
-      .populate('thoughts')
-      .populate('friends')
+      .populate({
+        path: 'friends',
+        select: '-__v'
+      })
+      .populate({
+        path: 'thoughts',
+        select: '-__v'
+      })
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No user with that ID 😕' })
@@ -59,7 +65,7 @@ module.exports = {
 
   //Deletes a user by id
   deleteUser(req, res) {
-    User.findOneAndDelete({ _id: req.params.userId })
+    User.findOneAndDelete({ _id: req.params.id })
       .then((user) =>
         !user
           ? res
