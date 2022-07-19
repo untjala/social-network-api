@@ -3,20 +3,29 @@ const { Thought, User } = require('../models');
 module.exports = {
   //Creates a new thought
   createThought(req, res) {
+    if(req.body.userId) {
     Thought.create(req.body)
-      .then(thought => {
+      .then((thought) => {
         return User.findOneAndUpdate(
-          { _id: body.userId },
-          { $push: { thoughts: thought._id } },
+          { _id: req.body.userId },
+          { $addToSet: { thoughts: thought._id } },
           { new: true }
         );
       })
       .then((user) =>
         !user
-          ? res.status(404).json({ message: 'No user with that ID 😕' })
-          : res.json(user)
+          ? res.status(404).json({
+              message: 'Thought created, but found no user with that ID',
+            })
+          : res.json('Created the thought! 🎉')
       )
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+    } else {
+      res.status(404).json({message: 'User ID not provided!'});
+    }
   },
   //Gets all thoughts
   getThoughts(req, res) {
@@ -29,7 +38,7 @@ module.exports = {
 
   //Gets a single thought by their ID
   getSingleThought(req, res) {
-    Thought.findOne({ _id: req.params.thoughtId })
+    Thought.findOne({ _id: req.params.id })
       .populate({ path: 'reactions', select: '-__v' })
       .then((thought) =>
         !thought
@@ -41,7 +50,7 @@ module.exports = {
 
   //Update a thought by id
   updateThought(req, res) {
-    Thought.findOneAndUpdate({ _id: req.params.thoughtId },
+    Thought.findOneAndUpdate({ _id: req.params.id },
       { $set: req.body },
       { runValidators: true, new: true }
     )
