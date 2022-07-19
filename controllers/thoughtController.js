@@ -38,7 +38,7 @@ module.exports = {
 
   //Gets a single thought by their ID
   getSingleThought(req, res) {
-    Thought.findOne({ _id: req.params.id })
+    Thought.findOne({ _id: req.params.thoughtId })
       .populate({ path: 'reactions', select: '-__v' })
       .then((thought) =>
         !thought
@@ -50,7 +50,7 @@ module.exports = {
 
   //Update a thought by id
   updateThought(req, res) {
-    Thought.findOneAndUpdate({ _id: req.params.id },
+    Thought.findOneAndUpdate({ _id: req.params.thoughtId },
       { $set: req.body },
       { runValidators: true, new: true }
     )
