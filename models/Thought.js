@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types} = require('mongoose');
 const moment = require('moment');
 
 //Subdocument of reaction comes before the thought model as aspects of thought are dependent on the reaction schema
@@ -6,7 +6,7 @@ const ReactionSchema = new Schema(
   {
     reactionId: {
       type: Schema.Types.ObjectId,
-      default: () => new Types.ObjectId
+      default: () => new Types.ObjectId()
     },
     reactionBody: {
       type: String,

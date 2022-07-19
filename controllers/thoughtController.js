@@ -77,10 +77,10 @@ module.exports = {
   //Add a friend to thought
   createReaction(req, res) {
     Thought.findOneAndUpdate({ _id: req.params.thoughtId },
-      { $push: { reactions: body} },
+      { $push: { reactions: req.body} },
       { runValidators: true, new: true   }
     )
-      .then((thought) => res.json(thought))
+      .then((thought) => res.json({message: 'Reaction added! 🥳 '}))
       .catch((err) => res.status(500).json(err));
   },
   //Delete a friend from a thought
@@ -89,7 +89,7 @@ module.exports = {
       { $pull: { reactions: {reactionId: req.params.reactionId} } },
       { runValidators: true, new: true  }
     )
-      .then((thought) => res.json(thought))
+      .then((thought) => res.json({ message: 'Reaction deleted! 💥' }))
       .catch((err) => res.status(500).json(err));
   }
 };
